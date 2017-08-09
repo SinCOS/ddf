@@ -1,0 +1,64 @@
+{% set title %}
+    银行卡信息
+{% endset %}
+{% extends 'user/layout.twig' %}
+
+
+ {% block content %}
+ <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-8">
+          <form class="am-form am-form-horizontal layui-form" method="POST">
+              <div class="am-form-group">
+              <label for="user-name" class="am-u-sm-3 am-form-label">银行卡号姓名</label>
+              <div class="am-u-sm-9">
+                <input type="text" name="user" lay-verify='required' placeholder="请输入银行卡号姓名" {%if bank.user %} readonly {% endif %} value="{{ bank.user }}">
+              </div>
+            </div>
+            <div class="am-form-group">
+              <label for="user-name" class="am-u-sm-3 am-form-label">开户银行</label>
+              <div class="am-u-sm-9">
+                <input type="text" name="where" lay-verify='required' placeholder="请输入开户地址" {%if bank.where %} readonly {% endif %} value="{{ bank.where }}">
+              </div>
+            </div>
+            <div class="am-form-group">
+              <label for="user-name" class="am-u-sm-3 am-form-label">银行卡号</label>
+              <div class="am-u-sm-9">
+                <input type="text" name="code" lay-verify='required' placeholder="请输入银行卡号" {%if bank.code %} readonly {% endif %} value="{{ bank.code }}">
+              </div>
+            </div>
+            <div class="am-form-group">
+                {{ csrf.field | raw }}
+            </div>
+            
+            <div class="am-form-group">
+              <div class="am-u-sm-9 am-u-sm-push-3">
+                  {% if not bank %}
+                <button type="submit" class="am-btn am-btn-primary" lay-submit  lay-filter='frm1'> 保存修改</button>
+                {% endif %}
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}
+    
+{% block js %}
+<script src='/assets/layui/layui.js'></script>
+<script>
+    layui.use(['form','layer'],function(){
+        var form = layui.form();
+        form.on('submit(frm1)',function(data){
+            $.post('/user/bank',data.field,function(data){
+                alert('保存成功');
+                window.location = window.location;
+            },'json').fail(function(){
+                alert('保存失败');
+            });
+            return false;;
+        });
+    })
+</script>
+{% endblock %}

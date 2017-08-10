@@ -1,0 +1,45 @@
+{% extends 'templates/admin.twig' %}
+{% set title= '收款记录' %}
+{% block content %}
+	<div class="am-g">
+		<table class="am-table am-table-bordered am-padding">
+			<thead>
+				<th>时间</th>
+			<th>订单号</th>
+			<th>门店</th>
+			<th>支付类型</th>
+			<th>金额</th>
+			<th>状态</th>
+			<th>操作</th>
+			</thead>
+			<tbody>
+				{% for item in log_list %}
+					<tr>
+						<td>{{ item.create_time|date('Y-m-d H:i:s') }}</td>
+						<td>{{ item.tid }}</td>
+						<td>
+							{{ store_list[item.sid] ?: '未知店铺'}}
+
+						</td>
+						<td>
+							{{ item.PayType }}
+ 						</td>
+ 						<td>
+ 							{{ item.fee }}元
+ 						</td>
+ 						<td>
+ 							{% if item.status == 1 %}
+								<span class="am-text-success">成功</span>
+ 							{% endif %}
+ 						</td>
+ 						<td>
+ 							<a href="{{ path_for('admin.store.logging.detail',{'id' :item.id}) }}">查看详情</a>
+ 						</td>
+
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+{% endblock %}

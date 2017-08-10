@@ -1,0 +1,29 @@
+{% extends 'templates/admin.twig' %}
+{% set title= '门店列表' %}
+{% block content %}
+	<div class="am-g">
+		<table class="am-table am-table-bordered am-padding">
+			<thead>
+				<th>ID</th>
+			<th>名称</th>
+			<th>操作</th>
+			</thead>
+			<tbody>
+				{% for item in store_list %}
+					<tr>
+						<td>{{ item.id }}</td>
+						<td>{{ item.name }}</td>
+						<td>
+							<a target="_blank" href="{{ path_for('store.qrcode',{'id':item.id})}}" class="am-btn am-btn-default">收款二维码</a>
+							<a href="{{ path_for('admin.store.edit',{'id':item.id})}}" class="am-btn am-btn-default">编辑</a>
+							<a href="" class="am-btn am-btn-default">删除</a>
+
+						</td>
+
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+{% endblock %}

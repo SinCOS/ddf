@@ -34,9 +34,6 @@ class User extends Model
 			'password' => md5($password)
 		]);
 	}
-	public function setBank($user,$where,$code){
-		$this->bank = json_encode(['where'=>$where,'user'=>$user,'code'=>$code]);
-	}
 	public function getEmailVariables()
 	{
 	return [

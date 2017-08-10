@@ -1,7 +1,7 @@
 <?php
 
 use Respect\Validation\Validator as v;
-
+date_default_timezone_set('Asia/Shanghai');
 session_start();
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -62,7 +62,12 @@ $container['validator'] = function ($container) {
 $container['HomeController'] = function($container) {
 	return new \App\Controllers\HomeController($container);
 };
-
+$container['StoreCashierController'] = function($container) {
+	return new \App\Controllers\StoreCashierController($container);
+};
+$container['StoreFontController'] = function($container){
+	return new \App\Controllers\StoreFontController($container);
+};
 $container['AuthController'] = function($container) {
 	return new \App\Controllers\Auth\AuthController($container);
 };

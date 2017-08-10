@@ -1,0 +1,54 @@
+{% extends 'templates/admin.twig' %}
+{% set title = '编辑门店' %}
+{%block content %}
+<div class="am-g am-padding">
+	<form class="am-form" method="POST">
+  <fieldset >
+    <div class="am-form-group">
+      <label for="doc-ds-ipt-1"> <span class="am-text-danger">*</span>门店名称</label>
+      <input type="text" value="{{store.name}}" id="doc-ds-ipt-1"  name="name" class="am-form-field" placeholder="门店名称" required="">
+    </div>
+
+    <div class="am-form-group">
+      <label for="oc-ds-select-1">支付成功后通知</label>
+      <select id="oc-ds-select-1" class="am-form-field">
+        <option>禁止选择我</option>
+      </select>
+    </div>
+	<div class="am-form-group">
+		<label>付款成功后跳转链接</label>
+		<input type="text" name="jump_url" id="" value="{{store.jump_url}}">
+	</div>
+	<div class="am-form-group">
+	<label>是否自动跳转</label>
+      <label class="am-radio-inline">
+        <input type="radio"  value="1" name="auto_jump" {% if store.auto_jump == 1 %}checked{% endif %}> 是
+      </label>
+      <label class="am-radio-inline">
+        <input type="radio" name="auto_jump" value="0" {% if store.auto_jump == 0 %}checked{% endif %}> 否
+      </label>
+    </div>
+    <div class="am-form-group">
+    	<label>门店logo</label>
+    	<input type="text" autocomplete="off" name="logo" value="{{store.logo}}">
+    	  <img class="am-img-thumbnail" alt="140*140" src="http://www.luckwo.com/attachment/{{store.logo}}" width="200" height="120"/>
+    </div>
+    <div class="am-form-group">
+    	<label>付款说明</label>
+    	<textarea name="instruction" rows="8" placeholder="选填">{{store.instruction}}</textarea>
+    </div>
+    <div class="am-form-group"><label for=""></label>
+    	<input type="text" name="remark" value="{{store.remark}}" placeholder="选填" id="">
+    </div>
+    <div class="am-checkbox">
+      <label>
+        <input type="checkbox"> 无法选中的复选框
+      </label>
+    </div>
+
+    <button type="submit" class="am-btn am-btn-primary">提交</button>
+  </fieldset>
+</form>
+</div>
+
+{%endblock%}

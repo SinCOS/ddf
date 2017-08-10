@@ -1,0 +1,43 @@
+{% extends 'templates/admin.twig' %}
+{% set title= '收款记录-详情' %}
+{% block content %}
+	<div class="am-g">
+		<table class="am-table am-table-bordered am-padding">
+			<tbody>
+				<tr>
+					<th>订单号:</th>
+					<td>{{detail.tid}}</td>
+				
+				
+				</tr>
+				<tr>
+					<th>交易单号:</th>
+					<td>{{detail.transaction_id}}</td>
+				</tr>
+				<tr>
+					<th>时间:</th>
+					<td>
+						{{detail.create_time | date('Y-m-d H:i:s')}}
+					
+					</td>
+					
+				</tr>
+				<tr>
+					<th>付款方式:</th>
+					<td>
+						{{detail.PayType}}
+					</td>
+				</tr>
+				<tr>
+					<th>金额:</th>
+					<td>{{detail.fee}}元</td>
+				</tr>
+				<tr>
+					<th>用户openid:</th>
+					<td>{{detail.openid}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+{% endblock %}

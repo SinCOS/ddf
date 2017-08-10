@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body style="background: black;">
+	<div style="margin: 100px auto; width: 256px;">
+			<div id="doc-qrcode">
+		
+	</div>
+	</div>
+
+</body>
+
+<script src="//code.jquery.com/jquery.js"></script>
+<script type="text/javascript" src="/assets/js/amazeui.js"></script>
+<script type="text/javascript">
+	$(function(){
+		 $qr = $('#doc-qrcode');
+
+   		 function makeCode(text) {
+     		 $qr.empty().qrcode({
+     		 	 text: text, // 要生产二维码的文字
+				  render: "", // 渲染方式，默认的选择顺序为 `canvas` -> `svg` -> `table`
+				  width: 256, // 二维码宽度 `px`
+				  height: 256, // 二维码高度 `px`
+				  correctLevel: 3, // 纠错级别，可取 0、1、2、3，数字越大说明所需纠错级别越大
+				  background: "#ffffff", // 背景色
+				  foreground: "#000000" // 前景色
+     		 });
+    	}
+    	makeCode('http://xxx.lxrs.net/store/{{store.id}}');
+	})
+</script>
+
+</html>

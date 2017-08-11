@@ -4,6 +4,7 @@ use App\Middleware\AuthMiddleware;
 use App\Models\Store;
 use App\Library\wechatSetting;
 use EasyWeChat\Foundation\Application;
+use App\Library\Pay;
 $app->get('/','HomeController:index')->setName('home');
 $app->get('/app','HomeController:start')->setName("start");
 $app->group('',function () {
@@ -13,12 +14,34 @@ $app->group('',function () {
 	$this->get('/auth/signin','AuthController:getSignIn')->setName('auth.signin');
 	$this->post('/auth/signin','AuthController:postSignIn');
 })->add(new GuestMiddleware($container));
+function is_weixin(){ 
+    if ( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false ) {
+            return true;
+    }   
+    return false;
+}
 
+$app->get('/pay',function($request,$response){
+	Pay::init();
+	$payType = 'aliPay';
+	if(is_weixin()){
+		$payType = 'jsPay';
+	}
+	$result =  Pay::pushOrder(100,$payType,Pay::getMillisecond(),'6666');
+	return $response->withJson($result);
+    
 
+});
+$app->get('/qrcode',function($request,$response){
+
+	return $this->view->render($response,'qrcode.twig',[
+		'src' => $request->getParam('src') ?: '' 
+	]);
+});
 $app->get('/test',function($request,$response){
 	$setting = wechatSetting::getSetting();
 	$options = [
-		'debug' => true,
+		'debug' => false,
 		'app_id' => $setting->key,
 		'secret' => $setting->secret,
     	'token'  => $setting->token,

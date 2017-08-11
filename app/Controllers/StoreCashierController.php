@@ -11,7 +11,7 @@ class StoreCashierController extends Controller
 {
 	public function getList($request,$response)
 	{
-		$list = DB::table('czt_store_cashier_store')->take(20)->get()->toArray();
+		$list = Store::all()->toArray();
 		return $this->view->render($response,'admin/store/list.twig',[
 			'store_list' => $list
 		]);
@@ -36,8 +36,11 @@ class StoreCashierController extends Controller
 	}
 	public function getLogging($request,$response){
 		$store_list = DB::table('czt_store_cashier_store')->get(['id','name'])->toArray();
+		$page = (int)$request->getParam('p');
+		$page= $page > 0 ? $page :1 ;
+		$skip = ($page-1)*20;
 		$store = array_column($store_list,'name','id');
-		$list = StoreLog::orderBy('id','desc')->where('status',1)->take(20)->get();
+		$list = StoreLog::orderBy('id','desc')->where('status',1)->skip($skip)->take(20)->get();
 		return $this->view->render($response,'admin/store/logging.twig',[
 			'log_list' => $list,
 			'store_list' => $store

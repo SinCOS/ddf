@@ -28,6 +28,11 @@ $app->get('/pay',function($request,$response){
 		$payType = 'jsPay';
 	}
 	$result =  Pay::pushOrder(100,$payType,Pay::getMillisecond(),'6666');
+	if($result['errCode'] == '00'){
+		return $response->withRedirect($result['codeStr']);
+	}
+
+
 	return $response->withJson($result);
     
 

@@ -1,6 +1,10 @@
 <?php
+// use Illuminate\Events\Dispatcher;
+// use Illuminate\Container\Container;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
-$capsule = new \Illuminate\Database\Capsule\Manager;
+
+$capsule = new Capsule;
 
 $capsule->addConnection([
     'driver' => getenv('DB_DRIVER'),
@@ -13,6 +17,9 @@ $capsule->addConnection([
     'collation' => 'utf8_unicode_ci',
     'prefix' => 'ims_'
 ]);
-
 $capsule->setAsGlobal();
+// Capsule::setPaginator(function()use($app){
+// 	return new App\Library\Paginator('page');
+// });
+
 $capsule->bootEloquent();

@@ -155,8 +155,13 @@ class Pay
     public static function parseResult($result,$urldeocde = false){
         $urlStr = explode('&',$result);
         $resultStr = null;
+        $resultReson = [];
         foreach($urlStr as $param){
             $var = explode('=',$param);
+        	$resultReson[$var[0]] = $var[1];
+            if($var[0] == 'respCode' && $var[1] != '00'){
+            	throw new \Exception($resultReson['errMsg'], 1);
+            }
             if($var[0] == 'result_json'){
                 $desMethod = new \App\Library\DES3(Pay::$encKey);
 
@@ -172,15 +177,15 @@ class Pay
         return null;
     }
 
-    public static function pushOrder($fee,$payType = 'jsPay',$orderID,$title,$openid = null)
+    public static function pushOrder($fee,$payType = 'jsPay',$orderID,$title,$orderDesc,$openid = null)
     {
         $params = array(
             "amount" => $fee,
             "payType" => $payType,
             "orderId" => Pay::getMillisecond(),
             "businessTime" => Pay::getMillisecond(),
-            "notifyUrl" => "www.baidu.com",
-            "orderDesc" => "微信支付订单",
+            "notifyUrl" => getenv('ORDER_NOTIFY'),
+            "orderDesc" => $orderDesc,
             "errCodeDes" => "支付成功",
             "merchantId" => Pay::$merChantId,
             "merchantName" => "点点付"

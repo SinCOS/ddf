@@ -19,7 +19,7 @@ class StoreFontController extends Controller
 		$storeid = (int)$args['id'];
 		$store = Store::find($storeid);
 		$store_config = DB::table('czt_store_cashier_price')->where('storeid',$storeid);
-		return $this->view->render($response,'store.twig',[
+		return $this->view->render($response,'store/index.twig',[
 			'store_config' => $store_config,
 			'store' => $store 
 		]);

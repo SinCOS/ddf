@@ -49,7 +49,9 @@ $container['view'] = function ($container) {
 		'check' => $container->auth->check(),
 		'user' => $container->auth->user()
 	]);
-
+	$view->getEnvironment()->addGlobal('slim',[
+		'web_root' => getenv('WEB_ROOT')
+	]);
 	$view->getEnvironment()->addGlobal('flash',$container->flash);
 
 	return $view;

@@ -20,7 +20,8 @@
         "slim/flash": "^0.1.0",
         "vlucas/phpdotenv": "^2.4",
         "phpunit/phpunit": "^6.0",
-        "overtrue/wechat": "~3.1"
+        "overtrue/wechat": "~3.1",
+        "illuminate/pagination": "^5.4"
     },
     "autoload": {
     	"psr-4": {

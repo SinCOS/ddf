@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{{store.name}} 正在向您收款</title>
+    <meta name="format-detection" content="telephone=no">
+    <!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> -->
+    <!-- <meta name="apple-touch-fullscreen" content="yes"> -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <!-- <script src="{JS_URL}flexible.js"></script> -->
+    <link rel="stylesheet" href="http://www.luckwo.com/addons/czt_store_cashier/template/mobile/css/style.min.css" />
+</head>
+<body>
+    <div id="wrap">
+        <div id="front">
+            <header>
+                <div class="logo">
+                    <img src="http://www.luckwo.com/attachment/{{store.logo}}" />
+                    <h1>{{store.name}}</h1>
+                </div>
+            </header>
+            <section>
+                <div class="container">
+                    <div class="amount active">
+                        <div class="shining"></div>
+                        <span>输入金额</span>
+                        <p class="amount-number"><i>¥</i> <span id="amount"></span></p>
+                        <input type="hidden" id="amt">
+                    </div>
+                    <textarea {%if store.enable_remark !=1 %}style="display:none"{%endif%} maxlength="100" placeholder="备注" id="remark" rows="4"></textarea>
+                    {%if store.instruction %}
+                    <div style="margin-top: 10px;font-size: .4rem">付款说明：</div>
+                    <div style="font-size: .4rem;margin-top: 5px;">{php echo str_replace("\n",'<br>',store.instruction);}</div>
+                    {% endif %}
+                   
+                </div>
+            </section>
+            <footer>
+                <div id="keyBoard">
+                    <i data-str="1">1</i><i data-str="2">2</i><i data-str="3">3</i><i data-str="del"><img src="http://www.luckwo.com/addons/czt_store_cashier/template/mobile/images/backspace.png"/></i>
+                    <i data-str="submit" id="pay">确认<br/>支付</i>
+                    <i data-str="4">4</i><i data-str="5">5</i><i data-str="6" class="no-right">6</i>
+                    <i data-str="7">7</i><i data-str="8">8</i><i data-str="9" class="no-right">9</i>
+                    <i data-str="hide"><img src="http://www.luckwo.com/addons/czt_store_cashier/template/mobile/images/hide_keypad.png"/></i><i data-str="0">0</i><i data-str="." class="no-right"><span>.</span></i>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="http://www.luckwo.com/addons/czt_store_cashier/template/mobile/js/zepto.min.js"></script>
+    <script src="http://www.luckwo.com/addons/czt_store_cashier/template/mobile/js/script.min.js"></script>
+</body>
+<script>
+function pay_now (argument) {
+    var price=$("#amt").val();
+    var remark=$('#remark').val();
+    if (price) {
+        location.href='/pay/{{store.id}}?time={{date().timestamp}}&fee='+price+'&remark='+remark;
+    }
+}
+</script>
+</html>

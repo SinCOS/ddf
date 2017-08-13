@@ -39,6 +39,47 @@
 					</tr>
 				{% endfor %}
 			</tbody>
+			<tfoot>
+
+				{%if log_list.hasPages() %} 
+ <div class="am-margin am-cf">
+        <hr/>
+        <!-- <p class="am-fl">共 15 条记录</p> -->
+        <ol class="am-pagination am-fr">
+        	  {% set elements = log_list.toArray() %}
+         {%if (log_list.onFirstPage()) %}
+       
+          <li class="am-disabled"><a href="#">&laquo;</a></li>
+          {%else%}
+           <li class="am-disabled"><a href="{{ log_list.previousPageUrl() }}">&laquo;</a></li>
+           {%endif%}
+{#         @foreach ($elements as $element)
+            {{-- "Three Dots" Separator --}}
+            @if (is_string($element))
+                <li class="am-disabled"><span>{{ $element }}</span></li>
+            @endif
+ #}
+           
+{#             {% for item in (elements.from+1) .. (elements.to) %}
+				<li><a href="{{app.request.uri}}?page={{item}}">{{ item|json_encode|raw }}</a></li>
+            {% endfor %}
+     
+        #}
+    
+
+   	 	{%if log_list.hasMorePages() %}
+
+            <li><a href="{{ log_list.nextPageUrl() }}" rel="next">&raquo;</a></li>
+       {% else %}
+            <li class="am-disabled"><span>&raquo;</span></li>
+       {%endif%}
+         
+        </ol>
+      </div>
+       
+{%endif%}
+				
+			</tfoot>
 		</table>
 	</div>
 	

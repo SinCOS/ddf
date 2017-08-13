@@ -33,6 +33,7 @@ class User extends Model
 		$this->update([
 			'password' => md5($password)
 		]);
+	
 	}
 	public function getEmailVariables()
 	{

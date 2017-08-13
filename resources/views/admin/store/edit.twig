@@ -1,20 +1,48 @@
 {% extends 'templates/admin.twig' %}
 {% set title = '编辑门店' %}
+
 {%block content %}
 <div class="am-g am-padding">
-	<form class="am-form" method="POST">
+	<form class="am-form layui-form" method="POST" id='app'>
   <fieldset >
     <div class="am-form-group">
       <label for="doc-ds-ipt-1"> <span class="am-text-danger">*</span>门店名称</label>
-      <input type="text" value="{{store.name}}" id="doc-ds-ipt-1"  name="name" class="am-form-field" placeholder="门店名称" required="">
+      <input type="text" value="{{store.name}}" lay-filter='required' id="doc-ds-ipt-1"  name="name" class="am-form-field" placeholder="门店名称" required="">
     </div>
-
+		{% verbatim %}
     <div class="am-form-group">
-      <label for="oc-ds-select-1">支付成功后通知</label>
-      <select id="oc-ds-select-1" class="am-form-field">
-        <option>禁止选择我</option>
-      </select>
+      <label for="oc-ds-select-1">支付成功后通知 <button type="button" class="am-badge am-close">&times;</button></label>
+      <input type="hidden" name="notify_fans[]" v-model="notify_fans" :value="item">
+
+		<ul class="am-list am-list-static am-list-border">
+		<template v-for="(item,index) in notify_fans" >
+		 <li> 
+		{{item}}
+		 <button type="button" class="am-badge am-close " @click="del(item);">&times;</button>
+			
+ 		 </li>
+		</template>
+     
+		</ul>
+		
+	
     </div>
+   {% endverbatim %}
+    <div class="am-form-group am-cf">
+    	<label>子商户</label>
+    	{% set child_id = store.child_id %}
+		{% for item in store_list %}
+			  <label class="am-checkbox">
+			  	 <input type="checkbox" lay-skin="primary" value="{{item.id}}" {% for sub in child_id %}
+			  		{% if sub == item.id %} checked {% endif %}
+			  	{% endfor %} name="subid[]" title="{{item.name}}">{{item.name}}
+			  	
+       				
+     		  </label>
+		{% endfor %}
+    
+		</div>
+  
 	<div class="am-form-group">
 		<label>付款成功后跳转链接</label>
 		<input type="text" name="jump_url" id="" value="{{store.jump_url}}">
@@ -22,10 +50,10 @@
 	<div class="am-form-group">
 	<label>是否自动跳转</label>
       <label class="am-radio-inline">
-        <input type="radio"  value="1" name="auto_jump" {% if store.auto_jump == 1 %}checked{% endif %}> 是
+        <input type="radio"  value="1" name="auto_jump" title='是' {% if store.auto_jump == 1 %}checked{% endif %}> 
       </label>
       <label class="am-radio-inline">
-        <input type="radio" name="auto_jump" value="0" {% if store.auto_jump == 0 %}checked{% endif %}> 否
+        <input type="radio" name="auto_jump" value="0"  title='否' {% if store.auto_jump == 0 %}checked{% endif %}> 
       </label>
     </div>
     <div class="am-form-group">
@@ -33,6 +61,12 @@
     	<input type="text" autocomplete="off" name="logo" value="{{store.logo}}">
     	  <img class="am-img-thumbnail" alt="140*140" src="http://www.luckwo.com/attachment/{{store.logo}}" width="200" height="120"/>
     </div>
+    <div class="am-form-group">
+    	<label>开户银行</label>
+    	<input type="text" name="bank" value="{{store.bank}}">
+    </div>
+    <div class="am-form-group"><label for="">开户人</label><input type="text" name="bankperson" id="" value="{{store.bankperson}}"></div>
+    <div class="am-form-group"><label for="">银行卡号码</label><input type="text" name="banknum" id="" value="{{store.banknum}}"></div>
     <div class="am-form-group">
     	<label>付款说明</label>
     	<textarea name="instruction" rows="8" placeholder="选填">{{store.instruction}}</textarea>
@@ -52,3 +86,35 @@
 </div>
 
 {%endblock%}
+
+
+
+{%block js %}
+{# <link rel="stylesheet" type="text/css" href="/assets/layui/css/layui.css"> #}
+<script src="https://unpkg.com/vue"></script>
+<script type="text/javascript" src="/assets/layui/layui.js"></script>
+	<script type="text/javascript">
+	var layer ;
+	var app = new Vue({
+		el:"#app",
+		data:{
+			notify_fans: {{store.nfy_fans|json_encode|raw}},
+			select_fans:[]
+		},
+		methods:{
+			del:function(index){
+				this.notify_fans.splice(index);
+			}
+		}
+	})
+	// layui.use(['form','layer'],function(){
+	// 	var form = layui.form();
+	// 	layer = layui.layer;
+	// 	form.on('submit("frm1")',function(data){
+
+	// 		return false;
+	// 	});
+	// });
+
+	</script>
+{% endblock %}

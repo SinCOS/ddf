@@ -101,6 +101,9 @@ class OrderController extends Controller
 				$orderID = $decoded['orderId'];
 				$order = StoreLog::where('uniontid',$orderID)->first();
 				$order->param = json_encode($decoded);
+				if($order->openid == 'alipay'){
+					$order->openid = $decoded['openid'];
+				}
 				$bankOrderId = $decoded['bankOrderId'];
 
 			}

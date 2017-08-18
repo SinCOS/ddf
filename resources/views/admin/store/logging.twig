@@ -41,46 +41,33 @@
 			</tbody>
 			<tfoot>
 
-				{%if log_list.hasPages() %} 
- <div class="am-margin am-cf">
+				
+
+				
+			</tfoot>
+		</table>
+		{%if log_list.hasPages() %} 
+		  {% set elements = log_list.toArray() %}
+		 <div class="am-margin am-cf">
         <hr/>
-        <!-- <p class="am-fl">共 15 条记录</p> -->
+        <p class="am-fl">当前第 {{elements.current_page}} 页</p> 
         <ol class="am-pagination am-fr">
-        	  {% set elements = log_list.toArray() %}
-         {%if (log_list.onFirstPage()) %}
+        	
+         <li>
+         	<a href="{{slim.uri.getBasePath()}}">第一页</a>
+         </li>
        
-          <li class="am-disabled"><a href="#">&laquo;</a></li>
-          {%else%}
-           <li class="am-disabled"><a href="{{ log_list.previousPageUrl() }}">&laquo;</a></li>
-           {%endif%}
-{#         @foreach ($elements as $element)
-            {{-- "Three Dots" Separator --}}
-            @if (is_string($element))
-                <li class="am-disabled"><span>{{ $element }}</span></li>
-            @endif
- #}
-           
-{#             {% for item in (elements.from+1) .. (elements.to) %}
-				<li><a href="{{app.request.uri}}?page={{item}}">{{ item|json_encode|raw }}</a></li>
-            {% endfor %}
-     
-        #}
-    
+          <li  {%if (log_list.onFirstPage()) %} class="am-disabled" {%endif%}><a href="{{ log_list.previousPageUrl() }}">上一页</a></li> 	 	
 
-   	 	{%if log_list.hasMorePages() %}
-
-            <li><a href="{{ log_list.nextPageUrl() }}" rel="next">&raquo;</a></li>
-       {% else %}
-            <li class="am-disabled"><span>&raquo;</span></li>
-       {%endif%}
+            <li {%if not log_list.hasMorePages() %} class="am-disabled"  {%endif%} ><a href="{{ log_list.nextPageUrl() }}" rel="next">下一页</a></li>
+   
+         
+       
          
         </ol>
       </div>
        
 {%endif%}
-				
-			</tfoot>
-		</table>
 	</div>
 	
 {% endblock %}

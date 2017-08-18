@@ -56,7 +56,7 @@ function pay_now (argument) {
     var price=$("#amt").val();
     var remark=$('#remark').val();
     if (price) {
-        location.href='/pay/{{store.id}}?time={{date().timestamp}}&fee='+price+'&remark='+remark;
+        location.href='/pay/{{store.id}}?tid={{date().timestamp}}&fee='+price+'&remark='+remark;
     }
 }
 </script>

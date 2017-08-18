@@ -4,12 +4,17 @@ namespace App\Controllers;
 
 use App\Models\User;
 use Respect\Validation\Validator as v;
+use Illuminate\Database\Capsule\Manager as DB;
 class UserController extends Controller
 {
-	public function index($request,$response)
+	public function getList($request,$response)
 	{
-		
-		return $this->view->render($response,'user/index.twig');
+		$nickname = $request->getParam('nickname');
+		$mc_fans = DB::table('mc_mapping_fans')->where('nickname','like',"%{$nickname}%")->get(['openid','nickname'])->toArray();
+		foreach($mc_fans as $key =>$val){
+			$mc_fans[$key]->value = $val->openid .'|'. $val->nickname;
+		}
+		return $response->withJson(['data'=> $mc_fans?: []]);
 	}
 	public function info($request,$response)
 	{

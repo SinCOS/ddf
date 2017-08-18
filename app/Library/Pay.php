@@ -13,9 +13,6 @@ class Pay
 	static $isTest = false;
     static $version = "2.1";
     static $testURL, $partnerId, $signKey, $merChantId, $encKey;
-    public function __construct(){
-
-    }
 	public static function init()
     {
         if (Pay::$isTest) {
@@ -176,7 +173,12 @@ class Pay
         }
         return null;
     }
-
+    public static function decrypt($base64){
+        Pay::init();
+        $des = new \App\Library\DES3(Pay::$encKey);
+        $decoded = $des->decrypt($base64);
+        return $decoded;
+    }
     public static function pushOrder($fee,$payType = 'jsPay',$orderID,$title,$orderDesc,$openid = null)
     {
         $params = array(
@@ -190,8 +192,8 @@ class Pay
             "merchantId" => Pay::$merChantId,
             "merchantName" => "点点付"
         );
-        if(!empty($openid)){
-        	$params['openid'] = $openid;
+        if($openid != null){
+        	$params['openId'] = $openid;
         }
         $result = null;
         Pay::request(Pay::$testURL, Pay::$partnerId, "pushOrder", $params, $result, 0);
@@ -211,7 +213,7 @@ class Pay
             "merchantId" => Pay::$merChantId,
             "merchantName" => "pay");
         $result = null;
-        Pay::request("www.baidu.com", Pay::$partnerId, "notify", $params, $result, 1);
+        Pay::request(getenv('ORDER_NOTIFY'), Pay::$partnerId, "notify", $params, $result, 1);
         echo "\n notifyMerchant end:" . $result;
     }
 

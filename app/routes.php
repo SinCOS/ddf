@@ -14,44 +14,13 @@ $app->group('',function () {
 	$this->get('/auth/signin','AuthController:getSignIn')->setName('auth.signin');
 	$this->post('/auth/signin','AuthController:postSignIn');
 })->add(new GuestMiddleware($container));
-function is_weixin(){ 
-    if ( strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false ) {
-            return true;
-    }   
-    return false;
-}
-$app->post('/order/notify',function($request,$response){
 
-});
-$app->get('/pay/{id:[0-9]+}',function($request,$response,$args){
-	$price = (double)$request->getParam('fee');
-	$store_id = (int)$args['id'];
-	$store = Store::find($store_id);
-	$price = $price > 0 ?$price : 1000000;
-	Pay::init();
-	$payType = 'aliPay';
-	if(is_weixin()){
-		$payType = 'jsPay';
-	}
-	try {
-		$result =  Pay::pushOrder($price * 100,$payType,Pay::getMillisecond(),'6666',"支付给{$store->name} $price 元");
-	} catch (Exception $e) {
-		return $response->write($e->getMessage());
-	}
-	
-	#echo $result['codeStr'];
-	#return $response->withJson($result);
-	if($result['errCode'] == '00'){
-		return $response->withRedirect($result['codeStr']);
-	}
-	return $response->withJson($result);
-    
-
-});
+$app->post('/order/notify','\App\Controllers\OrderController:postOrderNotify');
+$app->get('/user/weixin','\App\Controllers\UserController:getList');
+$app->get('/pay/{id:[0-9]+}','\App\Controllers\OrderController:getPay');
 $app->get('/qrcode',function($request,$response){
-
-	return $this->view->render($response,'qrcode.twig',[
-		'src' => $request->getParam('src') ?: '' 
+		return $this->view->render($response,'qrcode.twig',[
+		'src' => $request->getParam('src') ?: getenv('WEB_ROOT')
 	]);
 });
 $app->get('/oauth_callback',function($request,$response){
@@ -61,9 +30,13 @@ $app->get('/oauth_callback',function($request,$response){
 		'app_id' => $setting->key,
 		'secret' => $setting->secret,
     	'token'  => $setting->token,
+    	 'oauth' => [
+      		'scopes'   => ['snsapi_base'],
+      		'callback' => '/oauth_callback',
+  			]
 	];
 	$app = new Application($options);
-	$oauth = $app->oauth();
+	$oauth = $app->oauth;
 	$user = $oauth->user();
 	$_SESSION['wechat_user'] = $user->toArray();
 	$targetUrl = empty($_SESSION['target_url']) ? '/' : $_SESSION['target_url'];
@@ -72,24 +45,11 @@ $app->get('/oauth_callback',function($request,$response){
 $app->get('/666',function($request,$response){
 	if(!isset($_SESSION['wechat_user'])){
 		 $_SESSION['target_url'] = '/666';
-		 $setting = wechatSetting::getSetting();
-		$options = [
-		'debug' => false,
-		'app_id' => $setting->key,
-		'secret' => $setting->secret,
-    	'token'  => $setting->token,
-    	 'oauth' => [
-      		'scopes'   => ['snsapi_base'],
-      		'callback' => '/oauth_callback',
-  			]
-		];
-	$app = new Application($options);
-	echo 'sadfasd';
-	$app->oauth->redirect()->send();
+
 	}
 	var_dump($_SESSION['wechat_user']);
 	echo "string";
-	return $response->write($user->getId());
+	return $response->write('666');
 });
 $app->get('/test',function($request,$response){
 	$setting = wechatSetting::getSetting();

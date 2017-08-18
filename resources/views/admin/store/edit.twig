@@ -28,6 +28,7 @@
 	
     </div>
    {% endverbatim %}
+
     <div class="am-form-group am-cf">
     	<label>子商户</label>
     	{% set child_id = store.child_id %}
@@ -42,7 +43,14 @@
 		{% endfor %}
     
 		</div>
-  
+     <div class="am-form-group">
+   		<label>账户名</label>
+   		<input type="text" name="account" id="" value="{{store.account}}">
+   </div>
+   <div class="am-form-group">
+   	<label for="" required>登录密码</label>
+   	<input type="password" name="passwd" value="">
+   </div>
 	<div class="am-form-group">
 		<label>付款成功后跳转链接</label>
 		<input type="text" name="jump_url" id="" value="{{store.jump_url}}">

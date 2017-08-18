@@ -68,7 +68,8 @@ class StoreCashierController extends Controller
 		$skip = ($page-1)*20;
 		$store = array_column($store_list,'name','id');
 		$list = StoreLog::orderBy('id','desc')->where('status',1)->paginate(20,['*'],'page',$page);
-		$list->setPath($request->getBasePath());
+		$list->setPath($request->getUri()->getBasePath());
+		#var_dump($list->toArray());
 		return $this->view->render($response,'admin/store/logging.twig',[
 			'log_list' => $list,
 			'store_list' => $store

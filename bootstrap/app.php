@@ -27,6 +27,12 @@ $container['db'] = function ($container) use ($capsule) {
 	return $capsule;
 };
 
+$container['log'] = function($container){
+	$log = new \Monolog\Logger('logger_info');
+	$file_handler = new \Monolog\Handler\StreamHandler('../logs/'.date('Y-m-d') . '.log');
+	$log->pushHandler($file_handler);
+	return $log;
+};
 $container['auth'] = function($container) {
 	return new \App\Auth\Auth;
 };
@@ -47,10 +53,11 @@ $container['view'] = function ($container) {
 
 	$view->getEnvironment()->addGlobal('auth',[
 		'check' => $container->auth->check(),
-		'user' => $container->auth->user()
+		'user' => $container->auth->user(),
 	]);
 	$view->getEnvironment()->addGlobal('slim',[
-		'web_root' => getenv('WEB_ROOT')
+		'web_root' => getenv('WEB_ROOT'),
+		'uri' => $container->request->getUri()
 	]);
 	$view->getEnvironment()->addGlobal('flash',$container->flash);
 

@@ -5,7 +5,7 @@ use App\Models\Store;
 use App\Library\wechatSetting;
 use EasyWeChat\Foundation\Application;
 use App\Library\Pay;
-$app->get('/','HomeController:index')->setName('home');
+$app->get('/ddf','HomeController:index')->setName('home');
 $app->get('/app','HomeController:start')->setName("start");
 $app->group('',function () {
 	$this->get('/auth/signup','AuthController:getSignUp')->setName('auth.signup');

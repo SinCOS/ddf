@@ -70,7 +70,7 @@ class OrderController extends Controller
 	}
 	
 	try {
-		$result =  Pay::pushOrder($fee * 100,$payType,$tempOrderID,'6666',"支付给{$store->name} $price 元",$openID);
+		$result =  Pay::pushOrder($fee * 100,$payType,$tempOrderID,'6666',"支付给{$store->name} $fee 元",$openID);
 	} catch (Exception $e) {
 		return $response->write($e->getMessage());
 	}
@@ -91,26 +91,78 @@ class OrderController extends Controller
 	}
 	public function postOrderNotify($request,$response){
 		$ipaddress = $request->getServerParam('REMOTE_ADDR');
-		$params = $request->getParsedBody();
-		$this->log->addInfo($ipaddress,$params);
-		$this->log->addInfo(file_get_contents('php://input'));
-		if($params['respCode'] == '00'){
-			#echo base64_decode($params['result_json']);
-			$decoded = Pay::decrypt($params['result_json']);
-			if($decoded && isset($decoded['errCode']) && $decoded['errCode'] == '00'){
-				$orderID = $decoded['orderId'];
-				$order = StoreLog::where('uniontid',$orderID)->first();
-				$order->param = json_encode($decoded);
-				if($order->openid == 'alipay'){
-					$order->openid = $decoded['openid'];
-				}
-				$bankOrderId = $decoded['bankOrderId'];
-
-			}
 		
-			return $response->write($decoded);
+		$this->log->addInfo($ipaddress,$params ?: []);
+		$this->log->addInfo(file_get_contents('php://input'));
+		Pay::init();
+		$params = Pay::parseResult(file_get_contents('php://input'),true);
+		if(isset($params['errCode']) && $params['errCode'] == '00' && $params['merchantId'] == Pay::$merChantId){
+			#echo base64_decode($params['result_json']);
+			
+				$orderID = $params['orderId'];
+				if($params['tradeStatus'] == 3){
+					$order = StoreLog::where('uniontid',$orderID)->first();
+					if(!$order){
+						return $response->write('orderId no found !!');
+					}
+					// if($order->status > 0){
+					// 	return $response->write('status error !!!');
+					// }
+					$order->param = json_encode($params);
+					$openid = $order->openid;
+					if($order->openid == 'alipay'){
+						$order->openid = $params['openid'];
+					}
+					$order->status = 1;
+					$order->transaction_id = $params['orderNo'];
+					if($order->save()){
+						$store = Store::find($order->sid);
+						$fans = unserialize($store->notify_fans);
+						$setting = wechatSetting::getSetting();
+						if (!empty($fans)){
+							$options = [
+								'debug' => false,
+								'app_id' => $setting->key,
+								'secret' => $setting->secret,
+						    	'token'  => $setting->token,
+						    	 'oauth' => [
+						      		'scopes'   => ['snsapi_base'],
+						      		'callback' => '/oauth_callback',
+						  			]
+								];
+							$app = new Application($options);
+							$notice = $app->notice;
+							$tpl_id = 'qHVFAIOP0VfUZXyXoEAVCcjQaPcWC7yV-Xfd9i5vBZI';
+							foreach($fans as $key => $value){
+								$tmp = explode('|',$value);
+									$messageId = $notice->send([
+								        'touser' => $tmp[0],
+								        'template_id' => $tpl_id,
+								        'url' => 'xxxxx',
+								        'data' => [
+								            'first' => ['value'=> $store->name. ' - 订单支付成功', 'color' => '#173177'],
+								            'keyword1' => ['value' => $store->name, 'color' => '#173177'],
+								            'keyword2' => ['value' => $order->fee, 'color' => '#173177'],
+								            'keyword3' => ['value' => date('Y-m-d h:i:s', time()), 'color' => '#173177'],
+								            'keyword4' => ['value' => $order->tid, 'color' => '#173177'],
+								        ],
+						    		]);
+
+							}
+						
+						}
+						return $response->withJson($params);
+					}
+					return $resposne->write('save failed !!');
+				}
+				
+				
+
+		
+		
+			return $resposne->write('fail');
 		}
 		#$result = Pay::parseResult(file_get_contents('php://input'),true);
-		#return $response->withJson($result);
+		return $response->withJson($params);
 	}
 }

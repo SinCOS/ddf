@@ -22,15 +22,17 @@ class AuthController extends Controller
 
 	public function postSignIn($request,$response)
 	{
+
 		$auth = $this->auth->attempt(
 			$request->getParam('username'),
-			$request->getParam('password')
+			$request->getParam('password'),
+			$request->getParam('bus') ?: 'user'
 		);
 		if (!$auth) {
 			$this->flash->addMessage('error','登录失败');
 			return $response->withRedirect($this->router->pathFor('auth.signin'));
 		}
-
+		#return $response->write($request->getParam('bus'));
 		return $response->withRedirect($this->router->pathFor('home'));
 	}
 	public function getOff($request,$response){

@@ -47,6 +47,7 @@ class StoreCashierController extends Controller
 		// if($store->save()){
 		// 	return $resposne->withJson(['message'=>'success']);
 		// }
+		
 		return $response;
 	}
 	public function shop($request,$response){
@@ -67,8 +68,29 @@ class StoreCashierController extends Controller
 		$page= $page > 0 ? $page :1 ;
 		$skip = ($page-1)*20;
 		$store = array_column($store_list,'name','id');
-		$list = StoreLog::orderBy('id','desc')->where('status',1)->paginate(20,['*'],'page',$page);
-		$list->setPath($request->getUri()->getBasePath());
+		if($this->auth->isAdmin()){
+			$start  = $request->getParam('startDate');
+			if($start){
+				$list = StoreLog::orderBy('id','desc')->where('status',1)->where('create_time','>',strtotime($start))->where('create_time','<=',strtotime($request->getParam('endDate')))->paginate(20,['*'],'page',$page);
+			}else{
+				$list = StoreLog::orderBy('id','desc')->where('status',1)->paginate(20,['*'],'page',$page);
+			}
+			
+		}else{
+			$subids = unserialize($this->auth->user()->subID);
+			if(!empty($subids)){
+				$start  = $request->getParam('startDate');
+			if($start){
+				$list = StoreLog::orderBy('id','desc')->where('status',1)->whereIn('sid',$subids)->where('create_time','>',strtotime($start))->where('create_time','<=',strtotime($request->getParam('endDate')))->paginate(20,['*'],'page',$page);
+			}else{
+				$list = StoreLog::orderBy('id','desc')->where('status',1)->whereIn('sid',$subids)->paginate(20,['*'],'page',$page);
+			}
+				
+			}
+			
+		}
+		
+		$list->setPath($request->getUri());
 		#var_dump($list->toArray());
 		return $this->view->render($response,'admin/store/logging.twig',[
 			'log_list' => $list,

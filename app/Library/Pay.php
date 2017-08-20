@@ -184,7 +184,7 @@ class Pay
         $params = array(
             "amount" => $fee,
             "payType" => $payType,
-            "orderId" => Pay::getMillisecond(),
+            "orderId" => $orderID,
             "businessTime" => Pay::getMillisecond(),
             "notifyUrl" => getenv('ORDER_NOTIFY'),
             "orderDesc" => $orderDesc,

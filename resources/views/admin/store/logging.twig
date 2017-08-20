@@ -1,7 +1,28 @@
 {% extends 'templates/admin.twig' %}
 {% set title= '收款记录' %}
 {% block content %}
+	<div class="am-g-fixed">
+			<div class="am-alert am-alert-danger" id="my-alert" style="display: none">
+  <p>开始日期应小于结束日期！</p>
+		</div>
+	<form class="am-form am-form-inline am-padding">
+		  <div class="am-form-group am-form-icon">
+    <i class="am-icon-calendar"></i>
+    	<input type='text' id="my-startDate" name="startDate" value="{{ '-7 days'|date("Y-m-d")}}" style="padding-left: 26px;" />
+  </div>
+
+  <div class="am-form-group am-form-icon">
+    <i class="am-icon-clock-o"></i>
+   <input  type='text' id="my-endDate"  name="endDate" value="{{ 'now'|date("Y-m-d")}}" style="padding-left: 26px;" />
+  </div>
+<div class="am-form-group">
+	<button class="am-btn am-btn-default">提交</button>
+</div>
+</form>
+	</div>
 	<div class="am-g">
+	
+
 		<table class="am-table am-table-bordered am-padding">
 			<thead>
 				<th>时间</th>
@@ -52,10 +73,7 @@
         <hr/>
         <p class="am-fl">当前第 {{elements.current_page}} 页</p> 
         <ol class="am-pagination am-fr">
-        	
-         <li>
-         	<a href="{{slim.uri.getBasePath()}}">第一页</a>
-         </li>
+        
        
           <li  {%if (log_list.onFirstPage()) %} class="am-disabled" {%endif%}><a href="{{ log_list.previousPageUrl() }}">上一页</a></li> 	 	
 
@@ -70,4 +88,36 @@
 {%endif%}
 	</div>
 	
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+  $(function() {
+    var startDate = new Date(2014, 11, 20);
+    var endDate = new Date();
+    var $alert = $('#my-alert');
+    $('#my-startDate').datepicker().
+      on('changeDate.datepicker.amui', function(event) {
+        if (event.date.valueOf() > endDate.valueOf()) {
+          $alert.find('p').text('开始日期应小于结束日期！').end().show();
+        } else {
+          $alert.hide();
+          startDate = new Date(event.date);
+         //$('#my-startDate').text($('#my-start').data('date'));
+        }
+        $(this).datepicker('close');
+      });
+
+    $('#my-endDate').datepicker().
+      on('changeDate.datepicker.amui', function(event) {
+        if (event.date.valueOf() < startDate.valueOf()) {
+          $alert.find('p').text('结束日期应大于开始日期！').end().show();
+        } else {
+          $alert.hide();
+          endDate = new Date(event.date);
+        // $('#my-endDate').text($('#my-end').data('date'));
+        }
+        $(this).datepicker('close');
+      });
+  });
+</script>
 {% endblock %}

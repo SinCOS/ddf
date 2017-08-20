@@ -54,10 +54,11 @@ $container['view'] = function ($container) {
 	$view->getEnvironment()->addGlobal('auth',[
 		'check' => $container->auth->check(),
 		'user' => $container->auth->user(),
+		'isAdmin' => $container->auth->isAdmin(),
 	]);
 	$view->getEnvironment()->addGlobal('slim',[
 		'web_root' => getenv('WEB_ROOT'),
-		'uri' => $container->request->getUri()
+		'uriBase' => $container->request->getUri()->getBasePath()
 	]);
 	$view->getEnvironment()->addGlobal('flash',$container->flash);
 

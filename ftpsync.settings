@@ -4,10 +4,10 @@
 
 	"default": {
 
-		"host": "172.104.65.30",
-		"username": "pay",  // or null for anonymous login
-		"password": "123456",
-		"path": "/",
+		"host": "bxu2341860112.my3w.com",
+		"username": "bxu2341860112",  // or null for anonymous login
+		"password": "12345678",
+		"path": "/htdocs/ddf",
 
 		"upload_on_save": true, // set *false* if you do not want to upload on save!
 

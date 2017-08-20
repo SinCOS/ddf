@@ -1,5 +1,4 @@
 {
-    "name": "havenshen/slim-born",
     "description": "Slim Framework 3 skeleton application has authentication.",
     "type": "project",
     "keywords": ["slim", "slim 3", "skeleton", "authentication"],
@@ -14,14 +13,12 @@
     "require": {
         "slim/slim": "^3.0",
         "slim/twig-view": "^2.1",
-        "illuminate/database": "^5.2",
         "respect/validation": "^1.0",
         "slim/csrf": "^0.6.0",
         "slim/flash": "^0.1.0",
         "vlucas/phpdotenv": "^2.4",
-        "phpunit/phpunit": "^6.0",
         "overtrue/wechat": "~3.1",
-        "illuminate/pagination": "^5.4"
+        "catfan/Medoo": "^1.4"
     },
     "autoload": {
     	"psr-4": {

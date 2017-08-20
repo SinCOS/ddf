@@ -14,13 +14,16 @@ class Store extends Model
 	protected $guarded = [];
 	protected $dateFormat = 'U';
 	protected $append = [
-		'pay_type','nfy_fans','child_id'];
+		'pay_type','nfy_fans','child_id','username'];
 
 	public function getPayTypeAttribute()
 	{
 		$typeArr = ['wechat' =>'微信支付','alipay'=>'支付宝'];
 		return isset($typeArr[$this->type]) ? $typeArr[$this->type] : '未知' ;
 
+	}
+	public function getUserNameAttribute(){
+		return $this->account;
 	}
 	public function getNfyFansAttribute()
 	{

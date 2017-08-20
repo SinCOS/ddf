@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Auth\Auth;
 class StoreLog extends Model
 {
 
@@ -14,6 +14,7 @@ class StoreLog extends Model
 	public $email;
 	protected $guarded = [];
 	protected $dateFormat = 'U';
+
 	protected $append = [
 		'pay_type'];
 	protected $fillable = [

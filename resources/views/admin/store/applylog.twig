@@ -1,0 +1,139 @@
+{% extends 'templates/admin.twig' %}
+{% set title= '提现记录' %}
+{% block content %}
+	<div class="am-g-fixed am-padding" style="display:none;">
+			<div class="am-alert-danger am-padding">
+			金额:{{money}}  
+				{% if auth.isAdmin %}
+				<a href="http://www.baidu.com" onclick="return confirm('是否操作');">一键提现</a>
+				{% endif %}
+			
+		</div>
+			<div class="am-alert am-alert-danger" id="my-alert" style="display: none">
+  <p>开始日期应小于结束日期！</p>
+		</div>
+	<form class="am-form  am-padding">
+				  <div class="am-form-group ">
+   <label>订单号</label>
+    	<input type='text' name="orderNo" value="" style="padding-left: 26px;" />
+  </div>
+		  <div class="am-form-group am-form-icon">
+    <i class="am-icon-calendar"></i>
+    	<input type='text' id="my-startDate" name="startDate" value="2010-01-01" style="padding-left: 26px;" />
+  </div>
+
+  <div class="am-form-group am-form-icon">
+    <i class="am-icon-clock-o"></i>
+   <input  type='text' id="my-endDate"  name="endDate" value="{{ 'now'|date("Y-m-d")}}" style="padding-left: 26px;" />
+  </div>
+  <div class="am-form-group">
+  	<label>商家:</label>
+  	<select name="subId">
+  		<option value="">请选择</option>
+  		{% for item in stores %}
+			<option {% if subId == item.id %}
+				selected
+			{% endif %} value="{{item.id}}">{{item.name}}</option>
+  		{% endfor %}
+  	</select>
+  </div>
+<div class="am-form-group">
+	<button class="am-btn am-btn-default">提交</button>
+</div>
+</form>
+	</div>
+	<div class="am-g">
+		<table class="am-table am-table-bordered am-padding">
+			<thead>
+				<th >时间</th>
+			<th>门店</th>
+			<th>金额</th>
+			<th>费率%</th>
+			<th>实拨金额</th>
+			</thead>
+			<tbody>
+				{% for item in list %}
+					<tr >
+						<td>{{ item.createtime|date('Y-m-d') }}</td>
+						<td>
+							{{ store_list[item.sid] ?: '未知店铺'}}
+
+						</td>
+						<td>
+							{{item.money}}
+						</td>
+						<td>
+							{{item.fl}}
+						</td>
+						<td >
+							{{ item.pay }}
+ 						</td>
+ 					
+ 					
+ 					
+
+					</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+
+				
+
+				
+			</tfoot>
+		</table>
+		{%if log_list.hasPages() %} 
+		  {% set elements = log_list.toArray() %}
+			
+		 <div class="am-margin am-cf">
+        <hr/>
+        <p class="am-fl">当前第 {{elements.current_page}} 页</p> 
+        <ol class="am-pagination am-fr">
+        
+       
+          <li  {%if (log_list.onFirstPage()) %} class="am-disabled" {%endif%}><a href="{{ log_list.previousPageUrl() }}">上一页</a></li> 	 	
+
+            <li {%if not log_list.hasMorePages() %} class="am-disabled"  {%endif%} ><a href="{{ log_list.nextPageUrl() }}" rel="next">下一页</a></li>
+   
+         
+       
+         
+        </ol>
+      </div>
+       
+{%endif%}
+	</div>
+	
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+  $(function() {
+    var startDate = new Date(2014, 11, 20);
+    var endDate = new Date();
+    var $alert = $('#my-alert');
+    $('#my-startDate').datepicker().
+      on('changeDate.datepicker.amui', function(event) {
+        if (event.date.valueOf() > endDate.valueOf()) {
+          $alert.find('p').text('开始日期应小于结束日期！').end().show();
+        } else {
+          $alert.hide();
+          startDate = new Date(event.date);
+         //$('#my-startDate').text($('#my-start').data('date'));
+        }
+        $(this).datepicker('close');
+      });
+
+    $('#my-endDate').datepicker().
+      on('changeDate.datepicker.amui', function(event) {
+        if (event.date.valueOf() < startDate.valueOf()) {
+          $alert.find('p').text('结束日期应大于开始日期！').end().show();
+        } else {
+          $alert.hide();
+          endDate = new Date(event.date);
+        // $('#my-endDate').text($('#my-end').data('date'));
+        }
+        $(this).datepicker('close');
+      });
+  });
+</script>
+{% endblock %}

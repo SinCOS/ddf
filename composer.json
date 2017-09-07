@@ -17,7 +17,10 @@
         "slim/flash": "^0.1.0",
         "vlucas/phpdotenv": "^2.4",
         "overtrue/wechat": "~3.1",
-        "catfan/Medoo": "^1.4"
+         "phpunit/phpunit": "^6.0",
+      	 "illuminate/pagination": "^5.4",
+        "illuminate/database": "^5.2",
+        "slim/twig-view": "^2.2"
     },
     "autoload": {
     	"psr-4": {

@@ -12,7 +12,7 @@ class Store extends Model
 
 	public $email;
 	protected $guarded = [];
-	protected $dateFormat = 'U';
+	public $timestamps = false;
 	protected $append = [
 		'pay_type','nfy_fans','child_id','username'];
 
@@ -22,6 +22,7 @@ class Store extends Model
 		return isset($typeArr[$this->type]) ? $typeArr[$this->type] : '未知' ;
 
 	}
+
 	public function getUserNameAttribute(){
 		return $this->account;
 	}

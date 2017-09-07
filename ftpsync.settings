@@ -4,10 +4,10 @@
 
 	"default": {
 
-		"host": "bxu2341860112.my3w.com",
-		"username": "bxu2341860112",  // or null for anonymous login
-		"password": "12345678",
-		"path": "/htdocs/ddf",
+		"host": "luckwo.com",
+		"username": "luckwo",  // or null for anonymous login
+		"password": "123456",
+		"path": "/store",
 
 		"upload_on_save": true, // set *false* if you do not want to upload on save!
 
@@ -15,7 +15,7 @@
 		// "tls": false,
 		// "timeout": 30, // [seconds]
 
-		// "passive": true,
+		"passive": false,
 		// "download_on_open": false,
 		 "overwrite_newer_prevention": false,
 		// "default_folder_permissions": "755",

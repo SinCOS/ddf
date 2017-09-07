@@ -16,7 +16,7 @@ class StoreLog extends Model
 	protected $dateFormat = 'U';
 
 	protected $append = [
-		'pay_type'];
+		'pay_type','store'];
 	protected $fillable = [
 			'sid','fee','status','create_time','openid','type','uniacid','tid',
 			'uniontid','transaction_id','remark'
@@ -26,6 +26,9 @@ class StoreLog extends Model
 		$typeArr = ['wechat' =>'微信支付','alipay'=>'支付宝'];
 		return isset($typeArr[$this->type]) ? $typeArr[$this->type] : '未知' ;
 
+	}
+	public function getStoreAttribute(){
+		return Store::find($this->sid);
 	}
 
 }

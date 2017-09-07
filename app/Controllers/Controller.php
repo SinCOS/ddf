@@ -19,8 +19,25 @@ class Controller
     }   
     return false;
 	}
+	public function success($message = ''){
+		return $this->response->write(
+			<<<EOT
+			<script>
+			alert('$message');
+			history.go(-1);
+			</script>
+EOT
+		);
+	}
 	public function error($message =''){
-		return $this->response()->write($message);
+		return $this->response->write(
+			<<<EOT
+			<script>
+			alert('$message');
+			history.go(-1);
+			</script>
+EOT
+		);
 	}
 	public function __get($property)
 	{

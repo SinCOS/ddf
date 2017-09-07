@@ -14,10 +14,10 @@
 						<td>{{ item.id }}</td>
 						<td>{{ item.name }}</td>
 						<td>
-							<a target="_blank" href="/qrcode?src={{slim.web_root}}store/{{item.id}}" class="am-btn am-btn-default">收款二维码</a>
-							<a href="{{slim.web_root}}store/{{item.id}}" target="_blank" class="am-btn am-btn-default">二维码链接</a>
+							<a target="_blank" href="{{slim.web_root}}/qrcode?src={{slim.web_root}}/{{item.id}}" class="am-btn am-btn-default">收款二维码</a>
+							<a href="{{slim.web_root}}/{{item.id}}" target="_blank" class="am-btn am-btn-default">二维码链接</a>
 							<a href="{{ path_for('admin.store.edit',{'id':item.id})}}" class="am-btn am-btn-default">编辑</a>
-							<a href="" class="am-btn am-btn-default">删除</a>
+						
 
 						</td>
 

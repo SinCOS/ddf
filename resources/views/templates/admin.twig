@@ -4,17 +4,18 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze UI Admin index Examples</title>
-  <meta name="description" content="这是一个 index 页面">
+  <title>后台管理</title>
+  <meta name="description" content="">
   <meta name="keywords" content="index">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="renderer" content="webkit">
+
   <meta http-equiv="Cache-Control" content="no-siteapp" />
   <link rel="icon" type="image/png" href="/i/favicon.png">
   <link rel="apple-touch-icon-precomposed" href="/i/app-icon72x72@2x.png">
   <meta name="apple-mobile-web-app-title" content="Amaze UI" />
-  <link rel="stylesheet" href="/assets/css/amazeui.min.css"/>
-  <link rel="stylesheet" href="/assets/css/admin.css">
+  <link rel="stylesheet" href="/store/public/assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="/store/public/assets/css/admin.css">
 </head>
 <body>
 <!--[if lte IE 9]>
@@ -24,7 +25,7 @@
 
 <header class="am-topbar am-topbar-inverse admin-header">
   <div class="am-topbar-brand">
-    <strong>Amaze UI</strong> <small>后台管理模板</small>
+    <strong>后台管理</strong> <small></small>
   </div>
 
   <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
@@ -40,6 +41,9 @@
         <ul class="am-dropdown-content">
 {#           <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
           <li><a href="#"><span class="am-icon-cog"></span> 设置</a></li> #}
+          {% if auth.isAdmin %}
+            <li><a href="{{path_for('admin.store.adduser',{id:auth.user.id})}}">修改密码</a></li>
+          {% endif %}
           <li><a href="{{ path_for('auth.signout')}}"><span class="am-icon-power-off"></span> 退出</a></li>
         </ul>
       </li>
@@ -54,15 +58,18 @@
     <div class="am-offcanvas-bar admin-offcanvas-bar">
       <ul class="am-list admin-sidebar-list">
         <li><a href="admin-index.html" style="display: none;"><span class="am-icon-home"></span> 首页</a></li>
-
+    
         {% if auth.isAdmin  %}
+          <li><a href="{{ path_for('admin.store.adduser',{id:0})}}"><span class="am-icon-table"></span> 添加人员</a></li>
         <li><a href="{{ path_for('admin.store.list')}}"><span class="am-icon-table"></span> 门店管理</a></li>
+        <li><a href="{{ path_for('admin.store.edit',{id:0})}}"><span class="am-icon-table"></span> 添加门店</a></li>
+          <li><a href="{{ path_for('admin.store.applylog.list')}}"><span class="am-icon-table"></span> 提现记录</a></li>
         {% endif %}
         <li><a href="{{ path_for('admin.store.logging')}}"><span class="am-icon-pencil-square-o"></span> 收款记录</a></li>
         <li><a href="{{ path_for('auth.signout') }}"><span class="am-icon-sign-out"></span> 注销</a></li>
       </ul>
 
-      <div class="am-panel am-panel-default admin-sidebar-panel">
+      <div class="am-panel am-panel-default admin-sidebar-panel" style="display: none;">
         <div class="am-panel-bd">
           <p><span class="am-icon-bookmark"></span> 公告</p>
           <p>时光静好，与君语；细水流年，与君同。—— Amaze UI</p>
@@ -93,7 +100,7 @@
 
     <footer class="admin-content-footer">
       <hr>
-      <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+      <p class="am-padding-left">主办方：浙江吉洋互联网科技有限公司.</p>
     </footer>
   </div>
   <!-- content end -->
@@ -111,8 +118,8 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 
 <!--<![endif]-->
-<script src="/assets/js/amazeui.min.js"></script>
-<script src="/assets/js/app.js"></script>
+<script src="/store/public/assets/js/amazeui.min.js"></script>
+<script src="/store/public/assets/js/app.js"></script>
 {% block js %}
 
 {% endblock %}

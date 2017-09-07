@@ -14,7 +14,7 @@ try {
 
 $app = new \Slim\App([
 	'settings' => [
-		'displayErrorDetails' => true
+		'displayErrorDetails' => false
 	],
 
 ]);

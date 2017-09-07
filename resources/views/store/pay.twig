@@ -1,0 +1,29 @@
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript">
+	var result = {{params|json_encode|raw}}
+
+	document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+		if(!result || result['errCode'] != '00'){
+			alert(result['errCodeDes']+',请重新下单');
+			history.go(-1);
+			return false;
+		}
+		var pay_info = JSON.parse(result['codeUrl1']);
+		WeixinJSBridge.invoke('getBrandWCPayRequest', {
+			'appId' : pay_info['appId'],
+			'timeStamp': pay_info['timeStamp'],
+			'nonceStr' : pay_info['nonceStr'],
+			'package' : pay_info['package'],
+			'signType' : pay_info['signType'],
+			'paySign' : pay_info['paySign']
+		}, function(res) {
+			if(res.err_msg == 'get_brand_wcpay_request:ok') {
+				location.search += '&done=1';
+			} else {
+				alert('支付取消');
+				// /location.search += "&fail=1";
+				//history.go(-1);
+			}
+		});
+	}, false);
+</script>

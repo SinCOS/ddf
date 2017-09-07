@@ -27,7 +27,14 @@ class User extends Model
 		'status'
 	];
 	protected $dateFormat = 'U';
-
+	public function setUpdatedAt($value)
+	{
+		
+	}
+	public function getUpdatedAtColumn()
+	{
+    //Do-nothing
+	}
 	public function setPassword($password)
 	{
 		$this->update([

@@ -6,6 +6,7 @@ namespace App\Controllers;
 use App\Models\User;
 use App\Models\StoreLog;
 use App\Models\Store;
+use App\Library\Pay;
 use Illuminate\Database\Capsule\Manager as DB;
 
 
@@ -21,7 +22,8 @@ class StoreFontController extends Controller
 		$store_config = DB::table('czt_store_cashier_price')->where('storeid',$storeid);
 		return $this->view->render($response,'store/index.twig',[
 			'store_config' => $store_config,
-			'store' => $store 
+			'store' => $store,
+			'tid' => Pay::getMillisecond()
 		]);
 	}
 	

@@ -1,32 +1,26 @@
-<nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="{{ path_for('home') }}">SlimBorn</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
+<div class="layui-layout layui-layout-admin ">
+    <div class="layui-header layui-bg-green">
+        <div class="layui-logo" style="color: #fff;">SSL</div>
+        <ul class="layui-nav layui-layout-left layui-bg-green" lay-filter="">
+            <li class="layui-nav-item layui-this"><a href="">网站首页</a></li>
+            <li class="layui-nav-item"><a href="">支持中心</a></li>
+            <li class="layui-nav-item"><a href="">产品</a></li>
+            <li class="layui-nav-item"><a href="">社区</a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right layui-bg-green">
             {% if auth.check %}
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ auth.user.username }} <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="/user/info">我的信息</a></li>
-                <li role="separator" class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="{{ path_for('auth.password.change') }}">更改密码</a></li>
-                <li><a href="{{ path_for('auth.signout') }}">注销</a></li>
-              </ul>
+            <li class="layui-nav-item">
+                <a href="javascript:;"><img src="http://t.cn/RCzsdCq" class="layui-nav-img">{{auth.user.username}}</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;">修改信息</a></dd>
+                    <dd><a href="javascript:;">安全管理</a></dd>
+                    <dd><a href="{{path_for('auth.signout')}}">退了</a></dd>
+                </dl>
             </li>
             {% else %}
-            <li><a href="{{ path_for('auth.signin') }}">登录</a></li>
-            <li><a href="{{ path_for('auth.signup') }}">注册</a></li>
+            <li class="layui-nav-item"><a href="{{path_for('auth.signup')}}">注册</a></li>
+            <li class="layui-nav-item"><a href="{{path_for('auth.signin')}}">登录</a></li>
             {% endif %}
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+        </ul>
+    </div>
+</div>

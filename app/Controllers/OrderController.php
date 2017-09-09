@@ -12,26 +12,8 @@ use EasyWeChat\Foundation\Application;
 */
 class OrderController extends Controller
 {
-
-	public function getPay666($request,$response,$args){
-
-		$result = isset($_SESSION['wxpay']) ? $_SESSION['wxpay'] :  null;
-		if($result == null){return $this->error('非法访问');}
-		if((int)$request->getParam('done') == 1){
-			$orderID = $result['orderId'];
-			$orderLog = StoreLog::where('uniontid',$orderID)->first();
-			if($orderLog){
-				$store = Store::find($orderLog->sid);
-				if($store->auto_jump == 1){
-					return $response->withRedirect($store->jump_url);
-				}
-				return $response->withRedirect(getenv('RETURN_URL'));
-			}
-			return $response->withRedirect(getenv('RETURN_URL'));
-			
-		}
-		return $this->view->render($response,'store/pay.twig',['params' => $result,'param' => $result['codeUrl1']]);
-
+	public functin getList($request,$response,$args){
+		return $response->withJson(['data'=> $list ?:[]],200);
 	}
 	public function getPay($request,$response,$args){
 		$sid = (int)$args['id'];

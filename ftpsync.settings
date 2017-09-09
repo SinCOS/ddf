@@ -4,10 +4,10 @@
 
 	"default": {
 
-		"host": "luckwo.com",
-		"username": "luckwo",  // or null for anonymous login
-		"password": "123456",
-		"path": "/store",
+		"host": "ftp.example.com",
+		"username": "your_login",  // or null for anonymous login
+		"password": "your_password",
+		"path": "/",
 
 		"upload_on_save": true, // set *false* if you do not want to upload on save!
 
@@ -15,9 +15,9 @@
 		// "tls": false,
 		// "timeout": 30, // [seconds]
 
-		"passive": false,
+		// "passive": true,
 		// "download_on_open": false,
-		 "overwrite_newer_prevention": false,
+		// "overwrite_newer_prevention": true,
 		// "default_folder_permissions": "755",
 		// "default_upload_permissions": null, // null = no action taken
 		// "time_offset": 0, // [seconds]

@@ -5,14 +5,14 @@ use App\Models\Store;
 use App\Library\wechatSetting;
 use EasyWeChat\Foundation\Application;
 use App\Library\Pay;
-$app->get('/','HomeController:index')->setName('home')->add(new AuthMiddleware($container));
+$app->get('/','HomeController:index')->setName('home');
 $app->get('/app','HomeController:start')->setName("start");
 $app->group('',function () {
-	$this->get('/auth/signup','AuthController:getSignUp')->setName('auth.signup');
-	$this->post('/auth/signup','AuthController:postSignUp');
+	$this->get('/register','AuthController:getSignUp')->setName('auth.signup');
+	$this->post('/register','AuthController:postSignUp');
 
-	$this->get('/auth/signin','AuthController:getSignIn')->setName('auth.signin');
-	$this->post('/auth/signin','AuthController:postSignIn');
+	$this->get('/login','AuthController:getSignIn')->setName('auth.signin');
+	$this->post('/login','AuthController:postSignIn');
 })->add(new GuestMiddleware($container));
 $app->get('/pay/666','\App\Controllers\OrderController:getPay666');
 $app->post('/order/notify','\App\Controllers\OrderController:postOrderNotify');
@@ -23,44 +23,10 @@ $app->get('/qrcode',function($request,$response){
 		'src' => $request->getParam('src') ?: getenv('WEB_ROOT')
 	]);
 });
-$app->get('/oauth_callback',function($request,$response){
-	$setting = wechatSetting::getSetting();
-	$options = [
-		'debug' => false,
-		'app_id' => $setting->key,
-		'secret' => $setting->secret,
-    	'token'  => $setting->token,
-    	 'oauth' => [
-      		'callback' => getenv('WEB_ROOT') .'/oauth_callback',
-  			]
-	];
-	try {
-		$app = new Application($options);
-		$oauth = $app->oauth;
-		$user = $oauth->user();
-		$_SESSION['wechat_user'] = $user->toArray();
-	} catch (\Exception $e) {
-		
-	}
-	$targetUrl = empty($_SESSION['target_url']) ?  '/': $_SESSION['target_url'] ;
 
-	return $response->withRedirect($targetUrl);
-});
 $app->get('/666',function($request,$response){
 	session_destroy();
 	return $response->write('666');
-});
-$app->get('/test',function($request,$response){
-	$setting = wechatSetting::getSetting();
-	$options = [
-		'debug' => false,
-		'app_id' => $setting->key,
-		'secret' => $setting->secret,
-    	'token'  => $setting->token,
-	];
-	$app = new Application($options);
-	$user = $app->user;
-	return $response->withJson($user->lists());
 });
 $app->group('/admin',function()use($app){
 	$this->get('/store_cashier/list','StoreCashierController:getList')->setName('admin.store.list');
@@ -78,11 +44,11 @@ $app->group('',function(){
 	$this->get('/store/{id:[0-9]+}/qrcode','StoreFontController:getQrcode')->setName('store.qrcode');
 	$this->get('/{id:[0-9]+}','StoreFontController:getStore');
 });
-$app->group('',function () {
-	$this->get('/auth/signout','AuthController:getSignOut')->setName('auth.signout');
+$app->group('/auth',function () {
+	$this->get('/signout','AuthController:getSignOut')->setName('auth.signout');
 
-	$this->get('/auth/password/change','PasswordController:getChangePassword')->setName('auth.password.change');
-	$this->post('/auth/password/change','PasswordController:postChangePassword');
+	$this->get('/password/change','PasswordController:getChangePassword')->setName('auth.password.change');
+	$this->post('/password/change','PasswordController:postChangePassword');
 })->add(new AuthMiddleware($container));
 $app->post('/upload',function($request,$response){
 	$files = $request->getUploadedFiles();

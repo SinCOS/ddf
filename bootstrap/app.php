@@ -14,7 +14,7 @@ try {
 
 $app = new \Slim\App([
 	'settings' => [
-		'displayErrorDetails' => false
+		'displayErrorDetails' => true
 	],
 
 ]);
@@ -54,7 +54,7 @@ $container['view'] = function ($container) {
 	$view->getEnvironment()->addGlobal('auth',[
 		'check' => $container->auth->check(),
 		'user' => $container->auth->user(),
-		'isAdmin' => $container->auth->isAdmin(),
+		'app' => $container,
 	]);
 	$view->getEnvironment()->addGlobal('slim',[
 		'web_root' => getenv('WEB_ROOT'),

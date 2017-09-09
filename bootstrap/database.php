@@ -15,7 +15,7 @@ $capsule->addConnection([
     'charset' => 'utf8',
     'port' => getenv('DB_PORT'),
     'collation' => 'utf8_unicode_ci',
-    'prefix' => 'ims_'
+    'prefix' => 'cc_'
 ]);
 $capsule->setAsGlobal();
 // Capsule::setPaginator(function()use($app){

@@ -49,21 +49,18 @@ class AuthController extends Controller
 
 		$validation = $this->validator->validate($request,[
 			'username' => v::noWhitespace()->notEmpty()->UserAvailable(),
-			'mobile' => v::noWhitespace()->notEmpty()->MobileAvailable(),
-			'transpasswd' => v::noWhitespace()->notEmpty(),
-			'tjr' => v::noWhitespace()->notEmpty()->tjrAvailable(),
 			'password' => v::noWhitespace()->notEmpty(),
+		],[
+			'username' =>[
+				'noWhitespace' =>'不能为空'
+			]
 		]);
 		if ($validation->failed()) {
 			return $response->withRedirect($this->router->pathFor('auth.signup'));
 		}
-		$tjr = User::where('username',$request->getParam('tjr'))->first();
 		$user = User::create([
 			'username' => $request->getParam('username'),
-			'mobile' => $request->getParam('mobile'),
-			'password' => md5($request->getParam('password')),
-			'tjr' => $tjr['id'],
-			'transpasswd' => md5($request->getParam('transpassword'))
+			'password' => md5($request->getParam('password'))
 		]);
 		$this->auth->attempt($user->username,$request->getParam('password'));
 

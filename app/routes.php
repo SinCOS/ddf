@@ -24,10 +24,6 @@ $app->get('/qrcode',function($request,$response){
 	]);
 });
 
-$app->get('/666',function($request,$response){
-	session_destroy();
-	return $response->write('666');
-});
 $app->group('/admin',function()use($app){
 	$this->get('/store_cashier/list','StoreCashierController:getList')->setName('admin.store.list');
 	$this->get('/store_cashier/edit/{id:[0-9]+}','StoreCashierController:getEdit')->setName('admin.store.edit');

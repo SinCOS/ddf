@@ -13,7 +13,7 @@ class Order extends Model
 
 	protected $fillable = [
 		'id','good_id','uid','price','total','created_at','updated_at','status'
-	]
+	];
 	public function setUpdated_at(){
 		return 0 ;
 	}

@@ -5,15 +5,41 @@ namespace App\Controllers;
 use App\Library\Pay;
 use App\Models\Store;
 use App\Models\StoreLog;
+use App\Models\Good;
 use App\Library\wechatSetting;
+
 use EasyWeChat\Foundation\Application;
 /**
 * 
 */
 class OrderController extends Controller
 {
-	public functin getList($request,$response,$args){
+	
+	public function getList($request,$response,$args){
+		
 		return $response->withJson(['data'=> $list ?:[]],200);
+	}
+	public function addOrder($request,$response,$args){
+		$good_id = (int)$args['id'];
+		$amount = (int)$args['amount'];
+		$result = false;
+		try{
+			$good = Good::find($good_id);
+			if(!$good){throw new \Exception('未能找到该商品');}
+			$order = StoreLog::create([
+				'orderId' => Pay::getMillisecond(),
+				'uid' => $this->auth->id,
+				'status' => 0,
+				'amount' => $amount,
+				'total' => $amount * $good->price,
+				'goodString' => $good->toJson()
+			]);
+		}catch(\Exception $e){
+			$this->logger->addInfo(__FUNCTION__,[$e->getMessage()]);
+			$result  = false;
+		}
+		$good = Good::find($good_id);
+		return $response->withJson(['status'=>'ok'], $reuslt == false ? 400 : 200);
 	}
 	public function getPay($request,$response,$args){
 		$sid = (int)$args['id'];

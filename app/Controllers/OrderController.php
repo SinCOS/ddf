@@ -3,10 +3,11 @@
 namespace App\Controllers;
 
 use App\Library\Pay;
-use App\Models\Store;
+use App\Models\Order;
 use App\Models\StoreLog;
 use App\Models\Good;
 use App\Library\wechatSetting;
+
 
 use EasyWeChat\Foundation\Application;
 /**
@@ -16,24 +17,38 @@ class OrderController extends Controller
 {
 	
 	public function getList($request,$response,$args){
-		
 		return $response->withJson(['data'=> $list ?:[]],200);
 	}
 	public function addOrder($request,$response,$args){
 		$good_id = (int)$args['id'];
 		$amount = (int)$args['amount'];
+		$amount = $amount > 0 ? $amount : 1;
 		$result = false;
+		$good = Good::find($good_id);
+		if(!$good){
+			return $this->error("未能找到该商品");
+		}
 		try{
-			$good = Good::find($good_id);
-			if(!$good){throw new \Exception('未能找到该商品');}
-			$order = StoreLog::create([
-				'orderId' => Pay::getMillisecond(),
-				'uid' => $this->auth->id,
-				'status' => 0,
-				'amount' => $amount,
-				'total' => $amount * $good->price,
-				'goodString' => $good->toJson()
-			]);
+		
+			DB::beginTransaction();
+			try{
+				$order = Order::create([
+					'orderID' => Pay::getMillisecond(),
+					'uid' => $this->auth->id,
+					'good_id' => $good->id,
+					'status' => 0,
+					'price' => $good->price,
+					'amount' => $amount,
+					'total' => $amount * $good->price,
+					'goodString' => $good->toJson(),
+					'status' => 0
+				]);
+				
+				DB::commit();
+			}catch(\Exception $e){
+				DB::rollback();
+			}
+			
 		}catch(\Exception $e){
 			$this->logger->addInfo(__FUNCTION__,[$e->getMessage()]);
 			$result  = false;
@@ -42,21 +57,16 @@ class OrderController extends Controller
 		return $response->withJson(['status'=>'ok'], $reuslt == false ? 400 : 200);
 	}
 	public function getPay($request,$response,$args){
-		$sid = (int)$args['id'];
-		$tid = (int)$request->getParam('tid');
-		$fee = (float)$request->getParam('fee');
-		$store = Store::find($sid);
-		$order = StoreLog::where('tid',$tid)->first();
-		if(!$store){
-			return $this->error('店铺不存在');
+		$orderId = (int)$args['orderId'];
+		$order = Order::where('orderID',$orderId)->first();
+		if(!$order){
+			return $this->error('订单不存在');
 		}
-		$is_sub = empty($store->sub_much_id) ? 0: 1;
 		$OrderParam = [
 			'tid' => $tid,
 			'title' => "{$store->name} -收款",
 			'fee' => $fee,
 		];
-		
 		$payType = 'aliPay';
 		$openID = null;
 		$is_weixin = $this->is_weixin();
@@ -81,33 +91,16 @@ class OrderController extends Controller
 			$payType = 'jsPay';
 		};
 		$tempOrderID = Pay::getMillisecond();
-		if(!$order){
-			$order = StoreLog::create([
-				'tid' => $tid,
-				'fee' => $fee,
-				'status' => 0,
-				'sid' => $sid,
-				'remark' => $request->getParam('remark') ?:'',
-				'uniacid' => 2,
-				'transaction_id' => '',
-				'uniontid' => $tempOrderID,
-				'openid' => $openID ?: 'alipay',
-				'type' => $this->is_weixin() ? 'wechat' :'alipay'
-			]);
-		}else{
-			$order->uniontid = $tempOrderID;
-			$order->save();
-		}
 		
 		try {
 			Pay::init();
 			$result =  Pay::pushOrder($fee * 100,$payType,$tempOrderID,'6666',"支付给{$store->name} $fee 元",$openID);
 			$this->log->addInfo('wxpay',$result);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
+			$this->log->addDebug($e->getMessage);
 			return $response->write($e->getMessage());
 		}
-
-
+		
 		if($result['errCode'] == '00' && !$is_weixin){
 			return $response->withRedirect($result['codeStr']);
 		}
@@ -129,7 +122,6 @@ class OrderController extends Controller
 		Pay::init();
 		$params = Pay::parseResult(file_get_contents('php://input'),true);
 		if(isset($params['errCode']) && $params['errCode'] == '00' && $params['merchantId'] == Pay::$merChantId){
-			#echo base64_decode($params['result_json']);
 			
 				$orderID = $params['orderId'];
 				if($params['tradeStatus'] == 3){

@@ -20,6 +20,9 @@ class Controller
     return false;
 	}
 	public function success($message = ''){
+		if($this->request->isXhr()){
+			return $this->response->withJson(['message' => $message], 200);
+		}
 		return $this->response->write(
 			<<<EOT
 			<script>
@@ -30,6 +33,9 @@ EOT
 		);
 	}
 	public function error($message =''){
+		if($this->request->isXhr()){
+			return $this->response->withJson(['message' => $message], 400);
+		}
 		return $this->response->write(
 			<<<EOT
 			<script>

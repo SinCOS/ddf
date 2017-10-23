@@ -19,6 +19,7 @@ class Order extends Model
 		'status',
 		'goodString'
 	];
+	protected $dateFormat = 'U';
 	public function setUpdated_at(){
 		return 0 ;
 	}

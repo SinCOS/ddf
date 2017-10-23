@@ -15,7 +15,12 @@ class Admin
 		return isset($_SESSION['adm_id']);
 	}
 	public function logoff(){
-		return unset($_SESSION['adm_id']);
+		unset($_SESSION['adm_id']);
+		return true;
+	}
+	public function login($username,$password){
+		$bool = \App\Models\Admin::where('username',$username)->where('password',md5($password))->first() ?: false;
+		return $bool;
 	}
 
 }
